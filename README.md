@@ -1,6 +1,6 @@
-# [MonoGame Dependencies](http://monogame.net/) <a href='http://monogame.net/' target='_blank'><img src='https://github.com/mono/MonoGame/blob/develop/Graphics/Logos/MonogameLogo32x32.png?raw=true' width='16' height='16'></a>
+# KNI Dependencies
 
-This is where we store binary dependencies for the [MonoGame](https://github.com/mono/MonoGame) GitHub project.
+This is where we store binary dependencies for the [KNI](https://github.com/kniEngine/kni) GitHub project.
 
 ## Contributing
 
