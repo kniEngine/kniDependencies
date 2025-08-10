@@ -1,0 +1,1 @@
+https://github.com/kcat/openal-soft/releases/tag/1.24.3
