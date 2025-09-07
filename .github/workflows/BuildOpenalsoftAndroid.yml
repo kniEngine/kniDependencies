@@ -1,0 +1,120 @@
+name: Build OpenAL-Soft Android
+
+on:
+  workflow_dispatch: # manual trigger
+
+jobs:
+  build-android:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: true  # ensure openal-soft submodule is included
+
+    - name: Set up Android NDK
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25c  # specify the desired NDK version
+
+          # minimum Android 4.2 API for 32-bit devices
+          #-DANDROID_PLATFORM=android-17 `
+          # skip building tests
+          #-DALSOFT_TESTS=OFF `
+          # skip utilities like oalinfo
+          #-DALSOFT_UTILS=OFF `
+          # skip example programs
+          #-DALSOFT_EXAMPLES=OFF `
+          # skip install rules, only generate .so
+          #-DALSOFT_INSTALL=OFF `
+          # disable Linux PipeWire backend
+          #-DALSOFT_BACKEND_PIPEWIRE=OFF `
+          # disable OpenBSD Sndio backend
+          #-DALSOFT_BACKEND_SNDIO=OFF `
+          # embed HRTF data into library
+          #-DALSOFT_EMBED_HRTF_DATA=TRUE `
+          # force OpenSL-only (skip AAudio) optional
+          #-DALSOFT_REQUIRE_OPENSL=ON `
+
+    - name: Build armeabi-v7a
+      run: |
+        cmake -G "Ninja" -S external/openal-soft -B build/armeabi-v7a `
+          -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
+          -DANDROID_ABI=armeabi-v7a `
+          -DANDROID_PLATFORM=android-17 `
+          -DALSOFT_TESTS=OFF `
+          -DALSOFT_UTILS=OFF `
+          -DALSOFT_EXAMPLES=OFF `
+          -DALSOFT_INSTALL=OFF `
+          -DALSOFT_BACKEND_PIPEWIRE=OFF `
+          -DALSOFT_BACKEND_SNDIO=OFF `
+          -DALSOFT_EMBED_HRTF_DATA=TRUE `
+          -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
+          -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build build/armeabi-v7a --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/armeabi-v7a/libopenal.so
+
+    - name: Build arm64-v8a
+      run: |
+        cmake -G "Ninja" -S external/openal-soft -B build/arm64-v8a `
+          -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
+          -DANDROID_ABI=arm64-v8a `
+          -DANDROID_PLATFORM=android-21 `
+          -DALSOFT_TESTS=OFF `
+          -DALSOFT_UTILS=OFF `
+          -DALSOFT_EXAMPLES=OFF `
+          -DALSOFT_INSTALL=OFF `
+          -DALSOFT_BACKEND_PIPEWIRE=OFF `
+          -DALSOFT_BACKEND_SNDIO=OFF `
+          -DALSOFT_EMBED_HRTF_DATA=TRUE `
+          -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
+          -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build build/arm64-v8a --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/arm64-v8a/libopenal.so
+
+    - name: Build x86
+      run: |
+        cmake -G "Ninja" -S external/openal-soft -B build/x86 `
+          -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
+          -DANDROID_ABI=x86 `
+          -DANDROID_PLATFORM=android-17 `
+          -DALSOFT_TESTS=OFF `
+          -DALSOFT_UTILS=OFF `
+          -DALSOFT_EXAMPLES=OFF `
+          -DALSOFT_INSTALL=OFF `
+          -DALSOFT_BACKEND_PIPEWIRE=OFF `
+          -DALSOFT_BACKEND_SNDIO=OFF `
+          -DALSOFT_EMBED_HRTF_DATA=TRUE `
+          -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
+          -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build build/x86 --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/x86/libopenal.so
+
+    - name: Build x86_64
+      run: |
+        cmake -G "Ninja" -S external/openal-soft -B build/x86_64 `
+          -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
+          -DANDROID_ABI=x86_64 `
+          -DANDROID_PLATFORM=android-21 `
+          -DALSOFT_TESTS=OFF `
+          -DALSOFT_UTILS=OFF `
+          -DALSOFT_EXAMPLES=OFF `
+          -DALSOFT_INSTALL=OFF `
+          -DALSOFT_BACKEND_PIPEWIRE=OFF `
+          -DALSOFT_BACKEND_SNDIO=OFF `
+          -DALSOFT_EMBED_HRTF_DATA=TRUE `
+          -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
+          -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build build/x86_64 --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/x86_64/libopenal.so
+
+    - name: Upload OpenAL-Soft Android libraries
+      uses: actions/upload-artifact@v4
+      with:
+        name: openal-libraries
+        path: |
+          build/armeabi-v7a/libopenal.so
+          build/arm64-v8a/libopenal.so
+          build/x86/libopenal.so
+          build/x86_64/libopenal.so
