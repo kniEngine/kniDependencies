@@ -1,3 +1,6 @@
 [submodule "external/openal-soft"]
 	path = external/openal-soft
 	url = https://github.com/kcat/openal-soft.git
+[submodule "external/oboe"]
+	path = external/oboe
+	url = https://github.com/google/oboe.git
