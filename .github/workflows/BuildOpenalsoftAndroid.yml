@@ -51,7 +51,7 @@ jobs:
           -DALSOFT_BACKEND_SNDIO=OFF `
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build build/android-arm/native --config Release
         & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-arm/native/libopenal.so
 
@@ -69,7 +69,7 @@ jobs:
           -DALSOFT_BACKEND_SNDIO=OFF `
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build build/android-arm64/native --config Release
         & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-arm64/native/libopenal.so
 
@@ -87,7 +87,7 @@ jobs:
           -DALSOFT_BACKEND_SNDIO=OFF `
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build build/android-x86/native --config Release
         & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-x86/native/libopenal.so
 
@@ -105,7 +105,7 @@ jobs:
           -DALSOFT_BACKEND_SNDIO=OFF `
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build build/android-x64/native --config Release
         & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-x64/native/libopenal.so
 
