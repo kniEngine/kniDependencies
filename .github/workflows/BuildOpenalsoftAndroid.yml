@@ -18,7 +18,7 @@ jobs:
       with:
         ndk-version: r25c  # specify the desired NDK version
 
-          # minimum Android 4.2 API for 32-bit devices
+          # minimum Android API
           #-DANDROID_PLATFORM=android-17 `
           # skip building tests
           #-DALSOFT_TESTS=OFF `
@@ -39,7 +39,7 @@ jobs:
 
     - name: Build armeabi-v7a
       run: |
-        cmake -G "Ninja" -S external/openal-soft -B build/armeabi-v7a `
+        cmake -G "Ninja" -S external/openal-soft -B build/android-arm/native `
           -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
           -DANDROID_ABI=armeabi-v7a `
           -DANDROID_PLATFORM=android-17 `
@@ -52,12 +52,12 @@ jobs:
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
           -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build build/armeabi-v7a --config Release
-        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/armeabi-v7a/libopenal.so
+        cmake --build build/android-arm/native --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-arm/native/libopenal.so
 
     - name: Build arm64-v8a
       run: |
-        cmake -G "Ninja" -S external/openal-soft -B build/arm64-v8a `
+        cmake -G "Ninja" -S external/openal-soft -B build/android-arm64/native `
           -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
           -DANDROID_ABI=arm64-v8a `
           -DANDROID_PLATFORM=android-21 `
@@ -70,12 +70,12 @@ jobs:
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
           -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build build/arm64-v8a --config Release
-        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/arm64-v8a/libopenal.so
+        cmake --build build/android-arm64/native --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-arm64/native/libopenal.so
 
     - name: Build x86
       run: |
-        cmake -G "Ninja" -S external/openal-soft -B build/x86 `
+        cmake -G "Ninja" -S external/openal-soft -B build/android-x86/native `
           -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
           -DANDROID_ABI=x86 `
           -DANDROID_PLATFORM=android-17 `
@@ -88,12 +88,12 @@ jobs:
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
           -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build build/x86 --config Release
-        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/x86/libopenal.so
+        cmake --build build/android-x86/native --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-x86/native/libopenal.so
 
     - name: Build x86_64
       run: |
-        cmake -G "Ninja" -S external/openal-soft -B build/x86_64 `
+        cmake -G "Ninja" -S external/openal-soft -B build/android-x64/native `
           -DCMAKE_TOOLCHAIN_FILE="$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
           -DANDROID_ABI=x86_64 `
           -DANDROID_PLATFORM=android-21 `
@@ -106,15 +106,15 @@ jobs:
           -DALSOFT_EMBED_HRTF_DATA=TRUE `
           -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384" `
           -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build build/x86_64 --config Release
-        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/x86_64/libopenal.so
+        cmake --build build/android-x64/native --config Release
+        & "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe" --strip-all build/android-x64/native/libopenal.so
 
     - name: Upload OpenAL-Soft Android libraries
       uses: actions/upload-artifact@v4
       with:
         name: openal-libraries
         path: |
-          build/armeabi-v7a/libopenal.so
-          build/arm64-v8a/libopenal.so
-          build/x86/libopenal.so
-          build/x86_64/libopenal.so
+          build/android-arm/native/libopenal.so
+          build/android-arm64/native/libopenal.so
+          build/android-x86/native/libopenal.so
+          build/android-x64/native/libopenal.so
