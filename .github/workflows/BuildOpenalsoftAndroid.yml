@@ -112,7 +112,7 @@ jobs:
     - name: Upload OpenAL-Soft Android libraries
       uses: actions/upload-artifact@v4
       with:
-        name: openal-libraries
+        name: openal-android-libraries
         path: |
           build/android-arm/native/libopenal.so
           build/android-arm64/native/libopenal.so
